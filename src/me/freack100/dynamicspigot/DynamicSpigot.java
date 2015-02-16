@@ -9,14 +9,18 @@
 
 package me.freack100.dynamicspigot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.net.Socket;
 
-public class DynamicSpigot extends JavaPlugin {
+public class DynamicSpigot extends JavaPlugin implements Listener{
 
     @Override
     public void onEnable(){
@@ -44,6 +48,9 @@ public class DynamicSpigot extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Bukkit.getPluginManager().registerEvents(this,this);
+
     }
 
     @Override
@@ -69,4 +76,22 @@ public class DynamicSpigot extends JavaPlugin {
         }
     }
 
+    @EventHandler
+    public void on(PlayerQuitEvent e){
+        if(Bukkit.getOnlinePlayers().size() == 0){
+            Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    if(Bukkit.getOnlinePlayers().size() == 0){
+                        System.out.println("Shutting down server due to no players online.");
+                        Bukkit.shutdown();
+                    }
+                }
+            },20L*60);
+        }
+    }
+
 }
+
+
+
