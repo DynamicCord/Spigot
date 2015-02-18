@@ -20,16 +20,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.net.Socket;
 
-public class DynamicSpigot extends JavaPlugin implements Listener{
+public class DynamicSpigot extends JavaPlugin implements Listener {
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
+        /*
         try {
-            Socket socket = new Socket("127.0.0.1",1337);
+            Socket socket = new Socket("127.0.0.1", 1337);
             DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
 
             File file = new File("dynamicBungee.yml");
-            if(!file.exists()) file.createNewFile();
+            if (!file.exists()) file.createNewFile();
             FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 
             String ip = configuration.getString("ip");
@@ -37,9 +38,9 @@ public class DynamicSpigot extends JavaPlugin implements Listener{
             String name = configuration.getString("name");
 
             outToServer.writeBytes("create;"
-                    +name+";"
-                    +ip+";"
-                    +port+";"
+                            + name + ";"
+                            + ip + ";"
+                            + port + ";"
             );
 
             outToServer.close();
@@ -49,24 +50,26 @@ public class DynamicSpigot extends JavaPlugin implements Listener{
             e.printStackTrace();
         }
 
-        Bukkit.getPluginManager().registerEvents(this,this);
+        */
+
+        Bukkit.getPluginManager().registerEvents(this, this);
 
     }
 
+
     @Override
-    public void onDisable(){
+    public void onDisable() {
         try {
-            Socket socket = new Socket("127.0.0.1",1337);
+            Socket socket = new Socket("127.0.0.1", 1337);
             DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
 
             File file = new File("dynamicBungee.yml");
-            if(!file.exists()) file.createNewFile();
+            if (!file.exists()) file.createNewFile();
             FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 
             String name = configuration.getString("name");
 
-            outToServer.writeBytes("remove;"+name+";"
-            );
+            outToServer.writeBytes("remove;" + name + ";");
 
             outToServer.close();
             socket.close();
@@ -77,17 +80,17 @@ public class DynamicSpigot extends JavaPlugin implements Listener{
     }
 
     @EventHandler
-    public void on(PlayerQuitEvent e){
-        if(Bukkit.getOnlinePlayers().size() == 0){
+    public void on(PlayerQuitEvent e) {
+        if (Bukkit.getOnlinePlayers().size() == 0) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                 @Override
                 public void run() {
-                    if(Bukkit.getOnlinePlayers().size() == 0){
+                    if (Bukkit.getOnlinePlayers().size() == 0) {
                         System.out.println("Shutting down server due to no players online.");
                         Bukkit.shutdown();
                     }
                 }
-            },20L*60);
+            }, 20L * 60);
         }
     }
 
